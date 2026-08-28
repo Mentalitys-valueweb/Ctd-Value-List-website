@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTD Value list</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --demand-high: #ef4444;
+            --demand-med: #f59e0b;
+            --demand-low: #10b981;
+            --border-thick: 2px solid var(--border-color);
+            --border-accent: 2px solid var(--accent-color);
+            
+            /* 🎨 YOUR RARITY COLORS */
+            --rarity-exclusives: #c084fc;  /* Light Purple */
+            --rarity-secret: #000000;       /* Black */
+            --rarity-titans: #9ca3af;      /* Grey */
+            --rarity-mythic: #ef4444;      /* Red */
+            --rarity-legendary: #facc15;   /* Yellow */
+            --rarity-epic: #7e22ce;        /* Dark Purple */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: var(--border-thick);
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            color: var(--text-muted);
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: var(--card-bg);
+            border: var(--border-thick);
+            border-radius: 8px;
+            color: var(--text-color);
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .search-bar:focus {
+            border: var(--border-accent);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            border: var(--border-thick);
+            border-radius: 16px;
+            padding: 20px;
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        .item-card {
+            background-color: var(--card-bg);
+            border: var(--border-thick);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .item-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-color);
+            border: var(--border-accent);
+        }
+
+        .item-img-placeholder {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #334155, #1e293b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .item-info {
+            padding: 15px;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .item-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .item-detail {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        /* 🎨 RARITY COLOR CLASSES */
+        .rarity-Exclusives { color: var(--rarity-exclusives); font-weight: bold; }
+        .rarity-Secret { color: var(--rarity-secret); font-weight: bold; text-shadow: 0 0 3px #fff, 0 0 5px #fff; }
+        .rarity-Titans { color: var(--rarity-titans); font-weight: bold; text-shadow: 0 0 1px #fff, 0 0 2px #fff; }
+        .rarity-Mythic { color: var(--rarity-mythic); font-weight: bold; }
+        .rarity-Legendary { color: var(--rarity-legendary); font-weight: bold; }
+        .rarity-Epic { color: var(--rarity-epic); font-weight: bold; }
+        
+        /* 🌈 RAINBOW ANIMATION FOR LIMITED */
+        .rarity-Limited {
+            font-weight: bold;
+            background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff, #ff0000);
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 3s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        .demand-tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+
+        .demand-High { background-color: rgba(239, 68, 68, 0.2); color: var(--demand-high); border-color: var(--demand-high); }
+        .demand-Medium { background-color: rgba(245, 158, 11, 0.2); color: var(--demand-med); border-color: var(--demand-med); }
+        .demand-Low { background-color: rgba(16, 185, 129, 0.2); color: var(--demand-low); border-color: var(--demand-low); }
+    </style>
+</head>
+<body>
+  
+    <header>
+        <h1>CTD Values</h1>
+        <p>Updated community trading values & demand index</p>
+    </header>
+
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search item name..." onkeyup="filterItems()">
+
+    <div class="grid-container" id="itemGrid"></div>
+
+    <script>
+        // 📋 TOTAL: 56 Units — 7 RARITIES INCLUDING RAINBOW LIMITED!
+        const items = [
+            { name: "Mini Firework Titan", value: "7,500,000", valueNum: 7500000, rarity: "Limited", demand: "High", emoji: "🎆🟡" },
+             { name: "Upgraded Titan Noob", value: "5,750,000", valueNum: 5750000, rarity: "Secret", demand: "High", emoji: "🟡" },
+             { name: "Upgraded Titan Rig", value: "7,000,000", valueNum: 7000000, rarity: "Secret", demand: "High", emoji: "🖥️" },
+             { name: "Injured Titan Rig", value: "6,500,000", valueNum: 6500000, rarity: "Secret", demand: "Medium", emoji: "🖥️" },
+             { name: "Dim4ik_Play06", value: "250,000", valueNum: 250000, rarity: "Secret", demand: "Medium", emoji: "🧑‍💻" },
+             { name: "Oldiamevan", value: "0", valueNum: 0, rarity: "Secret", demand: "Medium", emoji: "🧑‍💻" },
+             { name: "Icov12", value: "4,200,000", valueNum: 4200000, rarity: "Secret", demand: "High", emoji: "🧑‍💻" },
+             { name: "Bambalix", value: "5,500,000", valueNum: 5500000, rarity: "Secret", demand: "High", emoji: "🧑‍💻" },
+             { name: "Ivanchik_202", value: "8,200,000", valueNum: 8200000, rarity: "Mythic", demand: "High", emoji: "🧑‍💻" },
+             { name: "Ninja Bacon", value: "9,100,000", valueNum: 9100000, rarity: "Mythic", demand: "Low", emoji: "🥓" },
+             { name: "Freezer1x1x1x1", value: "3,800,000", valueNum: 3800000, rarity: "Epic", demand: "Medium", emoji: "🧑‍💻" },
+             { name: "Master", value: "1,250,000", valueNum: 1250000, rarity: "Secret", demand: "High", emoji: "🟡" },
+             { name: "Titan Leprechaun", value: "6,800,000", valueNum: 6800000, rarity: "Limited Titans", demand: "High", emoji: "☘️" },
+             { name: "Astro Injured Titan Bacon", value: "7,300,000", valueNum: 7300000, rarity: "Limited Titans", demand: "Low", emoji: "🥓" },
+             { name: "Aqua Titan Noob", value: "2,400,000", valueNum: 2400000, rarity: "Limited Titans", demand: "Low", emoji: "🟡" },
+            { name: "Titan Firework", value: "1,850,000", valueNum: 1850000, rarity: "Limited Titans", demand: "Medium", emoji: "🎆🟡" },
+            { name: "Hyper Upgraded Titan Noob", value: "7,900,000", rarity: "Exclusives", demand: "High", emoji: "⚡🟡" },
+            { name: "Injured Laser Titan Bacon", value: "5,200,000", rarity: "Exclusives", demand: "Medium", emoji: "🥓" },
+            { name: "Frost Titan", value: "4,500,000", rarity: "Limited", demand: "Medium", emoji: "❄️🥶" },
+            { name: "Molten Boss", value: "6,100,000", rarity: "Mythic", demand: "High", emoji: "🔥🌋" },
+            { name: "Void Walker", value: "3,200,000", rarity: "Epic", demand: "Low", emoji: "🌑👤" },
+            { name: "Neon Cameraman", value: "950,000", rarity: "Epic", demand: "Low", emoji: "📹💡" },
+            { name: "Solar Flare Titan", value: "7,450,000", rarity: "Mythic", demand: "High", emoji: "☀️💥" },
+            { name: "Titan Clock Man V2", value: "8,800,000", rarity: "Mythic", demand: "High", emoji: "⏰💎" },
+            { name: "Shadow Speaker", value: "2,100,000", rarity: "Epic", demand: "Medium", emoji: "🎵👤" },
+            { name: "Glitch Titan", value: "5,900,000", rarity: "Exclusives", demand: "High", emoji: "💻⚠️" },
+            { name: "Crystal Titan", value: "4,750,000", rarity: "Epic", demand: "Medium", emoji: "💎🔷" },
+            { name: "Titan Radar Man", value: "3,500,000", rarity: "Epic", demand: "Low", emoji: "📡🔍" },
+            { name: "Diamond Enforcer", value: "2,800,000", rarity: "Legendary", demand: "Medium", emoji: "💍💪" },
+            { name: "Titan Speaker Man X", value: "9,500,000", rarity: "Mythic", demand: "High", emoji: "🔊🆇" },
+            { name: "Poison Cameraman", value: "1,100,000", rarity: "Epic", demand: "Low", emoji: "☠️📹" },
+            { name: "Thunder Titan", value: "6,300,000", rarity: "Limited", demand: "High", emoji: "⚡🌩️" },
+            { name: "Titan Monitor V4", value: "8,400,000", rarity: "Mythic", demand: "High", emoji: "🖥️🔱" },
+            { name: "Ghost TV Man", value: "1,900,000", rarity: "Epic", demand: "Low", emoji: "👻📺" },
+            { name: "Titan Speaker Man Golden", value: "8,900,000", rarity: "Legendary", demand: "High", emoji: "🔊👑" },
+            { name: "Cyber Titan", value: "5,600,000", rarity: "Exclusives", demand: "Medium", emoji: "🤖💻" },
+            { name: "Titan Sun Glasses", value: "4,100,000", rarity: "Epic", demand: "Medium", emoji: "😎☀️" },
+            { name: "Meteor Titan", value: "7,200,000", rarity: "Mythic", demand: "High", emoji: "☄️💫" },
+            { name: "Titan Microphone", value: "2,300,000", rarity: "Epic", demand: "Low", emoji: "🎤🎵" },
+            { name: "Titan Laser Core", value: "6,700,000", rarity: "Epic", demand: "High", emoji: "🔴⚡" },
+            { name: "Titan Speaker Man Blue", value: "5,400,000", rarity: "Exclusives", demand: "Medium", emoji: "🔊🔵" },
+            { name: "Titan Night Vision", value: "3,900,000", rarity: "Epic", demand: "Low", emoji: "👁️🌙" },
+            { name: "Titan Plasma Core", value: "7,600,000", rarity: "Mythic", demand: "High", emoji: "🟣⚡" },
+            { name: "Titan Speaker Man Red", value: "5,800,000", rarity: "Exclusives", demand: "Medium", emoji: "🔊🔴" },
+            { name: "Titan Reality Breaker", value: "9,999,999", rarity: "Mythic", demand: "High", emoji: "🌀💥" },
+            { name: "Titan Void Eye", value: "6,400,000", rarity: "Epic", demand: "High", emoji: "👁️🌑" },
+            { name: "Titan Speaker Man V4", value: "8,100,000", rarity: "Mythic", demand: "High", emoji: "🔊🔱" },
+            { name: "Titan Neon Blast", value: "4,800,000", rarity: "Epic", demand: "Medium", emoji: "💥🌈" },
+            { name: "Titan Dark Matter", value: "9,300,000", rarity: "Mythic", demand: "High", emoji: "🌑⚫" },
+            { name: "Titan Speaker Man White", value: "5,100,000", rarity: "Exclusives", demand: "Low", emoji: "🔊⚪" },
+            { name: "Titan Echo Sound", value: "3,400,000", rarity: "Epic", demand: "Low", emoji: "🔊🌀" },
+            { name: "Titan Supernova", value: "9,700,000", rarity: "Mythic", demand: "High", emoji: "💫🌟" },
+            { name: "Titan Speaker Man Shadow", value: "6,200,000", rarity: "Epic", demand: "Medium", emoji: "🔊👤" },
+            { name: "Titan Prism Light", value: "7,800,000", rarity: "Mythic", demand: "High", emoji: "🌈💎" },
+            { name: "Titan Speaker Man Crystal", value: "7,050,000", rarity: "Exclusives", demand: "Medium", emoji: "🔊💎" },
+            { name: "Titan Omega Core", value: "10,500,000", rarity: "Mythic", demand: "High", emoji: "🔵🔴" },
+            { name: "Titan Speaker Man Final", value: "12,000,000", rarity: "Limited", demand: "High", emoji: "🔊🏆" },
+        ];
+
+        function renderItems(data) {
+            const grid = document.getElementById('itemGrid');
+            grid.innerHTML = '';
+            
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-img-placeholder">${item.emoji}</div>
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-value">💎 ${item.value}</div>
+                        <div class="item-detail">
+                            <span>Rarity:</span> 
+                            <strong class="rarity-${item.rarity}">${item.rarity}</strong>
+                        </div>
+                        <div class="item-detail">
+                            <span>Demand:</span> 
+                            <span class="demand-tag demand-${item.demand}">${item.demand}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterItems() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = items.filter(item => item.name.toLowerCase().includes(query));
+            renderItems(filtered);
+        }
+
+        renderItems(items);
+    </script>
+</body>
+</html>
